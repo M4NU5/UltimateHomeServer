@@ -19,6 +19,7 @@ spec:
       labels:
         app.kubernetes.io/name: qbittorrent
     spec:
+      nodeName: {{ .Values.services.qbittorrent.nodeName }}
       containers:
         - name: qbittorrent
           image: "{{ .Values.services.qbittorrent.image.repository }}:{{ .Values.services.qbittorrent.image.tag }}"

@@ -19,6 +19,7 @@ spec:
       labels:
         app.kubernetes.io/name: plex
     spec:
+      nodeName: {{ .Values.services.plex.nodeName }}
       containers:
         - name: plex
           image: "{{ .Values.services.plex.image.repository }}:{{ .Values.services.plex.image.tag }}"

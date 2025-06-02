@@ -38,6 +38,8 @@ spec:
           volumeMounts:
             - name: radarr-config
               mountPath: /config
+            - name: seedbox
+              mountPath: /seedbox
             - name: smb
               subPath: "{{ .Values.services.radarr.data }}"
               mountPath: /data
@@ -45,6 +47,10 @@ spec:
         - name: radarr-config
           hostPath:
             path: "{{ .Values.services.radarr.config }}"
+            type: Directory
+        - name: seedbox
+          hostPath:
+            path: "{{ .Values.services.radarr.seedbox }}"
             type: Directory
         - name: smb
           persistentVolumeClaim:

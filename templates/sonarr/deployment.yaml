@@ -34,10 +34,11 @@ spec:
             - name: http
               containerPort: {{ .Values.services.sonarr.ports.http }}
               protocol: TCP
-
           volumeMounts:
             - name: sonarr-config
               mountPath: /config
+            - name: seedbox
+              mountPath: /seedbox
             - name: smb
               subPath: "{{ .Values.services.sonarr.data }}"
               mountPath: /data
@@ -45,6 +46,10 @@ spec:
         - name: sonarr-config
           hostPath:
             path: "{{ .Values.services.sonarr.config }}"
+            type: Directory
+        - name: seedbox
+          hostPath:
+            path: "{{ .Values.services.sonarr.seedbox }}"
             type: Directory
         - name: smb
           persistentVolumeClaim:
