@@ -249,7 +249,7 @@ services:
         ports:
             http: 6767
         config: config/bazarr
-        data: data
+        data: /data
     tautulli:
         enabled: false
         replicaCount: 1

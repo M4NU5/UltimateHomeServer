@@ -5,13 +5,10 @@
 
 <p align="center">
   <!-- Add shields from https://shields.io/ -->
-  <a href="https://github.com/sponsors/KyleTryon">
-    <img alt="GitHub Sponsors" src="https://img.shields.io/github/sponsors/KyleTryon">
+  <a href="https://github.com/sponsors/M4NU5">
+    <img alt="GitHub Sponsors" src="https://img.shields.io/github/sponsors/M4NU5">
   </a>
   <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/TechSquidTV/UltimateHomeServer/commitlint.yml">
-  <a href="https://discord.gg/CTC9DVvYZz">
-    <img alt="Discord" src="https://img.shields.io/discord/415249366840901643?style=plastic&logo=discord">
-  </a>
 </p>
 
 
@@ -21,12 +18,16 @@
 
 <p align="center">
   Deploy the ultimate home server stack with <a href="https://k3s.io/"> K3s </a> and <a href="https://helm.sh/">Helm</a>.
+  Created by [KyleTryon](https://github.com/KyleTryon)
+  Perfected by [M4NU5](https://github.com/M4NU5)
 </p>
 
 
 ## Getting Started
 
-View the [docs](https://www.ultimatehomeserver.com/docs/) for a detailed guide on how to get started.
+Here are some useful resources to get you started:
+- [TRasSH-Guides](https://trash-guides.info/)
+- [ultimatehomeserver](https://www.ultimatehomeserver.com/docs/)
 
 ---
 
@@ -34,21 +35,22 @@ View the [docs](https://www.ultimatehomeserver.com/docs/) for a detailed guide o
 ### Dashboard
 - 🏠 [`homepage`](https://gethomepage.dev/): A customizable start page for your home server.
 ### Media
-- 📺 [`plex`](https://www.plex.tv/): A personal media server.
-- 🪼 [`jellyfin`](https://jellyfin.org/): The free software media system.
+- 🪼 [`jellyfin`](https://jellyfin.org/): The free software media system. (Recommended)
+- 📺 [`plex`](https://www.plex.tv/): A personal media server. (Not advised, Plex was not designed to container environments like this)
 - 📖 [`kavita`](https://www.kavitareader.com/): A modern reading server for manga, comics, and books.
 ### Media Management
-- 👁️ [`overseerr`](https://overseerr.dev/): A request management and media discovery tool.
 - ⏺️ [`sonarr`](https://sonarr.tv/): An automated TV show download and management system.
 - 🎬 [`radarr`](https://radarr.video/): An automated movie download and management system.
-- 📊 [`tautulli`](https://tautulli.com/): Monitor your Plex Media Server.
 - 🐯 [`prowlarr`](https://github.com/Prowlarr/Prowlarr): Manage indexers for your *arr stack.
+- [`bazarr`](https://www.bazarr.media/): Automated subtitles for sonarr & radarr.
+- 👁️ [`overseerr`](https://overseerr.dev/): A request management and media discovery tool.
+- 📊 [`tautulli`](https://tautulli.com/): Monitor your Plex Media Server.
 - 🐇 [`autobrr`](https://autobrr.com/): Automatically search and download from IRC.
 ### Download
 - ⏬ [`qbittorrent`](https://www.qbittorrent.org/): A lightweight and feature-rich torrent client.
 - 📰 [`sabnzbd`](https://sabnzbd.org/): The automated Usenet download tool.
 ### Network
-- 🌐 [`nginx`](https://hub.docker.com/_/nginx): A high-performance web server and reverse proxy.
+- 🌐 [`traefik`](https://doc.traefik.io/): A kubernetes native high-performance web server and reverse proxy.
 - ☁️ [`cloudflared`](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation/): Expose services running on your home network to the internet.
 ### Messaging
 - 💬 [`thelounge`](https://thelounge.chat/): A modern, self-hosted web IRC client.
