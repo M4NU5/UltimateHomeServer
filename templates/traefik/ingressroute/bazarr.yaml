@@ -1,0 +1,1 @@
+{{- include "your-chart.ingressroute" (dict "name" "bazarr" "Values" .Values) }}

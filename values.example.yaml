@@ -1,5 +1,6 @@
 common:
     tz: America/New_York
+    namespace: default
     network:
         gateway: 192.168.1.1
     certs:
@@ -238,6 +239,17 @@ services:
             http: 8989
         config: /opt/sonarr/config
         data: /data
+    bazarr: 
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: lscr.io/linuxserver/bazarr
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 6767
+        config: config/bazarr
+        data: data
     tautulli:
         enabled: false
         replicaCount: 1

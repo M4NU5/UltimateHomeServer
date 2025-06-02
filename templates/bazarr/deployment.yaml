@@ -1,0 +1,53 @@
+{{- if .Values.services.bazarr.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bazarr
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app.kubernetes.io/name: bazarr
+spec:
+  revisionHistoryLimit: 3
+  replicas: {{ .Values.services.bazarr.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bazarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bazarr
+    spec:
+      containers:
+        - name: bazarr
+          image: "{{ .Values.services.bazarr.image.repository }}:{{ .Values.services.bazarr.image.tag }}"
+          imagePullPolicy: {{ .Values.services.bazarr.image.pullPolicy }}
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "{{ .Values.common.tz }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.services.bazarr.ports.http }}
+              protocol: TCP
+
+          volumeMounts:
+            - name: smb
+              subPath: "{{ .Values.services.bazarr.config }}"
+              mountPath: /config
+            - name: smb
+              subPath: "{{ .Values.services.bazarr.data }}"
+              mountPath: /data
+      volumes:
+        - name: bazarr-config
+          hostPath:
+            path: "{{ .Values.services.bazarr.config }}"
+            type: Directory
+        - name: smb
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.smb.pvcClaimName }}
+{{- end }}
