@@ -36,8 +36,7 @@ spec:
               protocol: TCP
 
           volumeMounts:
-            - name: smb
-              subPath: "{{ .Values.services.bazarr.config }}"
+            - name: bazarr-config
               mountPath: /config
             - name: smb
               subPath: "{{ .Values.services.bazarr.data }}"

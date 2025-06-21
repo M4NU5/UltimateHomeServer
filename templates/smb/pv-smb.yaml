@@ -15,6 +15,7 @@ spec:
   mountOptions:
     - dir_mode=0777
     - file_mode=0777
+    - nobrl # Need to recreate for mount options
   csi:
     driver: smb.csi.k8s.io
     readOnly: false

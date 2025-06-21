@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/name: thelounge
 spec:
   revisionHistoryLimit: 3
+  nodeName: {{ .Values.services.thelounge.nodeName }}
   replicas: {{ .Values.services.thelounge.replicaCount }}
   strategy:
     type: Recreate
@@ -20,23 +21,23 @@ spec:
         app.kubernetes.io/name: thelounge
     spec:
       containers:
-        - name: thelounge
-          image: "{{ .Values.services.thelounge.image.repository }}:{{ .Values.services.thelounge.image.tag }}"
-          imagePullPolicy: {{ .Values.services.thelounge.image.pullPolicy }}
-          env:
-            - name: PUID
-              value: "1000"
-            - name: PGID
-              value: "1000"
-            - name: TZ
-              value: "{{ .Values.common.tz }}"
-          ports:
-            - name: http
-              containerPort: {{ .Values.services.thelounge.ports.http }}
-              protocol: TCP
-          volumeMounts:
-            - name: thelounge-config
-              mountPath: /var/opt/thelounge
+      - name: thelounge
+        image: "{{ .Values.services.thelounge.image.repository }}:{{ .Values.services.thelounge.image.tag }}"
+        imagePullPolicy: {{ .Values.services.thelounge.image.pullPolicy }}
+        env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: "{{ .Values.common.tz }}"
+        ports:
+          - name: http
+            containerPort: {{ .Values.services.thelounge.ports.http }}
+            protocol: TCP
+        volumeMounts:
+          - name: thelounge-config
+            mountPath: /var/opt/thelounge
 
       volumes:
         - name: thelounge-config
