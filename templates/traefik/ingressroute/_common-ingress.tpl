@@ -21,7 +21,6 @@ spec:
           name: {{ $name }}
           port: {{ $svc.ports.http }}
       middlewares:
-        - name: redirect-https
         - name: default-headers
   tls:
     secretName: bongofett-cert
