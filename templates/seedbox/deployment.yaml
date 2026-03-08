@@ -21,8 +21,8 @@ spec:
           - smb
           - :sftp,host=$(FTP_HOST),user=$(FTP_USER),pass=$(FTP_PASS),port=$(FTP_PORT):/storage/watch/qbittorrent
           - --addr=0.0.0.0:445
-          - --smb-user=smbuser
-          - --smb-password=smbpassword
+          - --smb-user=$(SMB_USER)
+          - --smb-password=$(SMB_PASS)
           - --vfs-cache-mode=writes
           - --vfs-cache-max-size=10G
           - --log-level=INFO
@@ -46,6 +46,16 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: seedbox-ftp-creds
+                key: password
+          - name: SMB_USER
+            valueFrom:
+              secretKeyRef:
+                name: seedbox-smb-creds
+                key: username
+          - name: SMB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: seedbox-smb-creds
                 key: password
         ports:
           - containerPort: 445
