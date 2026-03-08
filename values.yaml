@@ -131,7 +131,7 @@ services:
         data: /data
 
     qbittorrent:
-        enabled: true
+        enabled: false
         replicaCount: 1
         image:
             repository: lscr.io/linuxserver/qbittorrent
