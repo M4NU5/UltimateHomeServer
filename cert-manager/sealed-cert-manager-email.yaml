@@ -1,0 +1,13 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: cert-manager-email
+  namespace: cert-manager
+spec:
+  encryptedData:
+    email: AgAwhvz5wWY9yBN1HakkrEWk3j81Te9HtnOvpPIym3FaQ+mPPKGuLhE2vRwdFmz1MART3iSxpWKPC2JuOvGlXcSGSndS8dqpkfQJx3iqikG7nWd4zy2WT5NhDF2G2sQeWRU4R/ToorSrbI1PMJ4YmPYbTwVCABjk9PvrPxAF1nJSbp/vH7wdPSDKMCj2PfsYGJDeoxj1Zi9KGLXMZfTIt4eRF1SqOSFzNEOMxoenO87T5jMP9HZDaRIqmTvNoFXE7Cw3dv7+2BrTDDqFEosjJUR3dmZznWSifgTVzej3se72a5zAe6ClNHf/M2REik4Ma1V2b0tURuMhllaourNPFgTJNNYMjzM+IU2UktRm4a8cqQOrU+uGUdLkHmoAet5gHDK8EDW8zJr1FEPqz6wri7b1C/0Jb4CLqfvb6tuP5YnNHVd5ijN9Gz/BJhTix+YjvLgrpQO6S4uIVglME8ZO88kYhr6EEVti99AQerspWq8gYXainDWPPnwQYKd2T4ERv2SBSe/ZullbPST35tOLx1mxMx1x1OmDVMyvr2fvzhKRTSWreF0jdsLpZ/+8hhgtLRwUGLJfCSJAjoIuO1OWUtb0qutGfyteNkqxR3GyC+5O8vpu8UnpPna9YMNiNEuIRmtogGtqb3r8yOiTqMDJoOPMN7YTUuV1GN85Q8LBAhgA8ZAIqJqwaLvIBGWidB+A8QvJng4gv9QX2WeqrAiUV71LyIqOFw==
+  template:
+    metadata:
+      name: cert-manager-email
+      namespace: cert-manager

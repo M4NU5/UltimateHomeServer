@@ -4,7 +4,6 @@ metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
   name: {{ .Values.storage.smb.pvName }}
-  namespace: {{ .Values.common.namespace }}
 spec:
   capacity:
     storage: 100Gi
@@ -15,15 +14,27 @@ spec:
   mountOptions:
     - dir_mode=0777
     - file_mode=0777
-    - nobrl # Need to recreate for mount options
+    - nobrl
   csi:
     driver: smb.csi.k8s.io
     readOnly: false
-    # volumeHandle format: {smb-server-address}#{sub-dir-name}#{share-name}
-    # make sure this value is unique for every share in the cluster
-    volumeHandle: plexvolume
+    volumeHandle: smb-nas-volume
     volumeAttributes:
-      source: {{ .Values.storage.smb.smbAddress }} # Change this to your SMB IP and share name
+      source: {{ .Values.storage.smb.smbAddress }}
     nodeStageSecretRef:
-      name: smbcreds
+      name: smb-creds
       namespace: {{ .Values.common.namespace }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.storage.smb.pvcClaimName }}
+  namespace: {{ .Values.common.namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  volumeName: {{ .Values.storage.smb.pvName }}
+  storageClassName: smb

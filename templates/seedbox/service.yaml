@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rclone-seedbox
+  namespace: home-server
+spec:
+  selector:
+    app: rclone-seedbox
+  ports:
+    - port: 445
+      targetPort: 445
+  type: ClusterIP

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rclone-seedbox
+  namespace: home-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rclone-seedbox
+  template:
+    metadata:
+      labels:
+        app: rclone-seedbox
+    spec:
+      containers:
+      - name: rclone
+        image: rclone/rclone:1.68.2
+        args:
+          - serve
+          - smb
+          - :sftp,host=$(FTP_HOST),user=$(FTP_USER),pass=$(FTP_PASS),port=$(FTP_PORT):/storage/watch/qbittorrent
+          - --addr=0.0.0.0:445
+          - --smb-user=smbuser
+          - --smb-password=smbpassword
+          - --vfs-cache-mode=writes
+          - --vfs-cache-max-size=10G
+          - --log-level=INFO
+        env:
+          - name: FTP_HOST
+            valueFrom:
+              secretKeyRef:
+                name: seedbox-ftp-creds
+                key: host
+          - name: FTP_PORT
+            valueFrom:
+              secretKeyRef:
+                name: seedbox-ftp-creds
+                key: port
+          - name: FTP_USER
+            valueFrom:
+              secretKeyRef:
+                name: seedbox-ftp-creds
+                key: username
+          - name: FTP_PASS
+            valueFrom:
+              secretKeyRef:
+                name: seedbox-ftp-creds
+                key: password
+        ports:
+          - containerPort: 445
+            name: smb
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        securityContext:
+          capabilities:
+            add: ["SYS_ADMIN"]
+          privileged: true
