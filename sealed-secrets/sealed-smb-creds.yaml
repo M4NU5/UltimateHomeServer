@@ -3,7 +3,7 @@ apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
   name: smb-creds
-  namespace: default
+  namespace: home-server
 spec:
   encryptedData:
     password: AgBPV6Glaix+t4l89D2OblFUVAJZ4rwKgdaQAk0fEtZJg4EQK+FrASB40Cew9W+4rLisPulYRUk3Bx+3pGY0b6rhdF6JwPBggH0KTyvgyh4/LDORYFyP4R68w3hML176OYnQV/vEUHKkGZaGrmoocRxjgqps+zjhS91S++FLq4FQQsss4ndUXB88H8M98JUOniWgBvft4PeA2zd374hM37Ftlzv2AItdI/JEooVLAclqN4N2E+BASrJ0LmWqQYmqzbl/4qxgxjqMwoc/8CSKXbsKxzd+OojI0REfeSY4Wo48QtLIUMOKV/EqQEJ3OYBc+ngqIf7Uyns01fyUarUeL+RRZNVEgO5orHPPIUTGLXf/3Wr3/WrpoQRQeX8whRk+BZUh/6kt+NfxRcK3Fu4udp1n47pQLlIkNDYNllDx6eCE3qdIxdBmY1YYB3MAjSSltlL2y0pbCveR/L3de8KxYa/oBExhQ/sly2r5RTFOTnf2MPXWtbTKwBwUykbxN1tEM3Sqd3IzFp+WBfPavbgJrJzDdWcOyyRrZcT4yr4yo2OS9EW7cDRSUfQK+txYguBBdYU1bdN/lcayLY7h12QPbH64k7aSjoen4k29V4LJ+nF/dNF00LsiHDme/RpiCkbQizqXtRszJ/mFlDkfIKCSYIUW/pI50objOvtupkQ95dqhVCmFWXskmyaGxeI697rF8TVre6Mhevp2amwVJuXOqnN9Ze5F
@@ -11,4 +11,4 @@ spec:
   template:
     metadata:
       name: smb-creds
-      namespace: default
+      namespace: home-server
