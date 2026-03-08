@@ -19,13 +19,6 @@ spec:
       labels:
         app.kubernetes.io/name: qbittorrent
     spec:
-      initContainers:
-        - name: create-config-dir
-          image: busybox
-          command: ["mkdir", "-p", "{{ .Values.services.qbittorrent.config }}"]
-          volumeMounts:
-            - name: host-root
-              mountPath: /host
       containers:
         - name: qbittorrent
           image: "{{ .Values.services.qbittorrent.image.repository }}:{{ .Values.services.qbittorrent.image.tag }}"
