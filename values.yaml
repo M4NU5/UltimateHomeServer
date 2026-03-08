@@ -20,6 +20,7 @@ storage:
     smb:
         pvcClaimName: pvc-smb
         pvName: pv-smb
+        smbAddress: //192.168.0.2/NASty
         # smbAddress loaded from sealed secret: smb-address
     seedbox:
         pvcClaimName: pvc-seedbox
