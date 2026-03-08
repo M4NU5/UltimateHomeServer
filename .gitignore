@@ -2,7 +2,6 @@
 # Chart dependencies
 **/charts/*.tgz
 # Personal files
-values.y*
 secrets.y*
 .env
 

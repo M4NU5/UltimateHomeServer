@@ -7,14 +7,18 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
-  source:
-    repoURL: https://github.com/M4NU5/UltimateHomeServer
-    targetRevision: HEAD
-    path: .
-    helm:
-      releaseName: arr-stack
-      valueFiles:
-        - values.yaml
+  sources:
+    - repoURL: https://github.com/M4NU5/UltimateHomeServer
+      targetRevision: HEAD
+      path: .
+      helm:
+        releaseName: arr-stack
+        valueFiles:
+          - values.yaml
+          - $private/values.yaml      # merged on top of public values.yaml
+    - repoURL: https://github.com/M4NU5/UltimateHomeServer
+      targetRevision: HEAD
+      ref: private
   destination:
     server: https://kubernetes.default.svc
     namespace: home-server

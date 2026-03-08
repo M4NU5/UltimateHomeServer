@@ -30,7 +30,7 @@ spec:
               value: "1000"
             - name: TZ
               value: "{{ .Values.common.tz }}"
-            - name: "JELLYFIN_PublishedServerUrl"
+            - name: JELLYFIN_PublishedServerUrl
               value: "jellyfin.{{ .Values.services.traefik.domain }}"
           ports:
             - name: http
@@ -43,20 +43,14 @@ spec:
             - name: jellyfin-config
               mountPath: /config
             - name: smb
-              subPath: "{{ .Values.services.plex.library }}"
+              subPath: "{{ .Values.services.jellyfin.library }}"
               mountPath: /library
-            # - name: library
-            #   mountPath: /library
       volumes:
         - name: jellyfin-config
           hostPath:
             path: "{{ .Values.services.jellyfin.config }}"
-            type: Directory
+            type: DirectoryOrCreate
         - name: smb
           persistentVolumeClaim:
             claimName: {{ .Values.storage.smb.pvcClaimName }}
-        # - name: library
-        #   hostPath:
-        #     path: "{{ .Values.services.jellyfin.library }}"
-        #     type: Directory
 {{- end }}

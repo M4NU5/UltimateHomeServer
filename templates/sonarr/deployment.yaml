@@ -37,21 +37,19 @@ spec:
           volumeMounts:
             - name: sonarr-config
               mountPath: /config
-            - name: seedbox
-              mountPath: /seedbox
             - name: smb
-              subPath: "{{ .Values.services.sonarr.data }}"
-              mountPath: /data
+              mountPath: {{ .Values.services.sonarr.data }}
+            - name: seedbox
+              mountPath: {{ .Values.services.sonarr.seedbox }}
       volumes:
         - name: sonarr-config
           hostPath:
             path: "{{ .Values.services.sonarr.config }}"
-            type: Directory
-        - name: seedbox
-          hostPath:
-            path: "{{ .Values.services.sonarr.seedbox }}"
-            type: Directory
+            type: DirectoryOrCreate
         - name: smb
           persistentVolumeClaim:
             claimName: {{ .Values.storage.smb.pvcClaimName }}
+        - name: seedbox
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.seedbox.pvcClaimName }}
 {{- end }}

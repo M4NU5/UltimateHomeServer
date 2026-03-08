@@ -34,25 +34,22 @@ spec:
             - name: http
               containerPort: {{ .Values.services.radarr.ports.http }}
               protocol: TCP
-
           volumeMounts:
             - name: radarr-config
               mountPath: /config
-            - name: seedbox
-              mountPath: /seedbox
             - name: smb
-              subPath: "{{ .Values.services.radarr.data }}"
-              mountPath: /data
+              mountPath: {{ .Values.services.radarr.data }}
+            - name: seedbox
+              mountPath: {{ .Values.services.radarr.seedbox }}
       volumes:
         - name: radarr-config
           hostPath:
             path: "{{ .Values.services.radarr.config }}"
-            type: Directory
-        - name: seedbox
-          hostPath:
-            path: "{{ .Values.services.radarr.seedbox }}"
-            type: Directory
+            type: DirectoryOrCreate
         - name: smb
           persistentVolumeClaim:
             claimName: {{ .Values.storage.smb.pvcClaimName }}
+        - name: seedbox
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.seedbox.pvcClaimName }}
 {{- end }}

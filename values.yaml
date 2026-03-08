@@ -1,0 +1,177 @@
+common:
+    namespace: home-server
+    tz: Europe/London
+    network:
+        gateway: 192.168.0.1
+
+certManager:
+    namespace: cert-manager
+    installCRDs: true
+    clusterIssuer:
+        enabled: true
+        name: letsencrypt-cluster-issuer
+        server: https://acme-staging-v02.api.letsencrypt.org/directory
+        # server: https://acme-v02.api.letsencrypt.org/directory
+        secretName: letsencrypt-cluster-issuer
+        ingressClass: traefik
+        # email loaded from sealed secret: cert-manager-email
+
+storage:
+    smb:
+        pvcClaimName: pvc-smb
+        pvName: pv-smb
+        # smbAddress loaded from sealed secret: smb-address
+    seedbox:
+        pvcClaimName: pvc-seedbox
+        pvName: pv-seedbox
+
+services:
+    traefik:
+        # domain loaded from sealed secret: traefik-domain
+        namespace: home-server
+        ports:
+            http: 80
+            https: 443
+
+    homepage:
+        enabled: true
+        namespace: home-server
+        replicaCount: 1
+        image:
+            repository: ghcr.io/benphelps/homepage
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 3000
+        bookmarks:
+            - Development:
+                - github:
+                    - icon: mdi-github
+                    - abbr: gh
+                    - href: https://github.com
+            - Media:
+                - youtube:
+                    - icon: mdi-youtube
+                    - abbr: yt
+                    - href: https://youtube.com
+        services:
+            - Media:
+                - jellyfin:
+                    - icon: jellyfin
+                    - description: Jellyfin
+        widgets:
+            - search:
+                focus: true
+                provider: '[duckduckgo, google]'
+                target: _blank
+        settings:
+            theme: dark
+            title: Homepage
+
+    jellyfin:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: lscr.io/linuxserver/jellyfin
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 8096
+            udp: 7359
+        config: /var/lib/k3s/config/jellyfin
+        library: data/library
+
+    prowlarr:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: lscr.io/linuxserver/prowlarr
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 9696
+        config: /var/lib/k3s/config/prowlarr
+
+    radarr:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: lscr.io/linuxserver/radarr
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 7878
+        config: /var/lib/k3s/config/radarr
+        data: /data
+        seedbox: /seedbox
+
+    sonarr:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: lscr.io/linuxserver/sonarr
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 8989
+        config: /var/lib/k3s/config/sonarr
+        data: /data
+        seedbox: /seedbox
+
+    bazarr:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: lscr.io/linuxserver/bazarr
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 6767
+        config: /var/lib/k3s/config/bazarr
+        data: /data
+
+    qbittorrent:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: lscr.io/linuxserver/qbittorrent
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 8080
+            p2p: 6881
+            p2pudp: 6881
+        config: /var/lib/k3s/config/qbittorrent
+        data: /seedbox
+
+    ## Disabled services
+    caido:
+        enabled: false
+    overseerr:
+        enabled: false
+    tautulli:
+        enabled: false
+    thelounge:
+        enabled: false
+    cloudflared:
+        enabled: false
+    autobrr:
+        enabled: false
+    unpackerr:
+        enabled: false
+    changedetectionio:
+        enabled: false
+    huginn:
+        enabled: false
+    gotify:
+        enabled: false
+    sabnzbd:
+        enabled: false
+    kavita:
+        enabled: false
+    playwright:
+        enabled: false
+    apprise:
+        enabled: false
+    plex:
+        enabled: false

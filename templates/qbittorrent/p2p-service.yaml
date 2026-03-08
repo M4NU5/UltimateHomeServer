@@ -7,18 +7,18 @@ metadata:
   labels:
     app.kubernetes.io/name: qbittorrent
 spec:
-  type: NodePort #ClusterIP
+  type: NodePort
   ports:
     - name: p2p
       port: {{ .Values.services.qbittorrent.ports.p2p }}
       targetPort: p2p
       protocol: TCP
-      nodePort: 30081 #{{ .Values.services.qbittorrent.ports.p2p }}
+      nodePort: 30081
     - name: p2pudp
       port: {{ .Values.services.qbittorrent.ports.p2pudp }}
       targetPort: p2p
       protocol: UDP
-      nodePort: 30082 #{{ .Values.services.qbittorrent.ports.p2pudp }}
+      nodePort: 30082
   selector:
     app.kubernetes.io/name: qbittorrent
 {{- end }}
