@@ -8,20 +8,9 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: smb
-  mountOptions:
-    - dir_mode=0777
-    - file_mode=0777
-    - nobrl
-  csi:
-    driver: smb.csi.k8s.io
-    readOnly: false
-    volumeHandle: seedbox-volume
-    volumeAttributes:
-      source: //rclone-seedbox.home-server.svc.cluster.local/data
-    nodeStageSecretRef:
-      name: seedbox-smb-creds
-      namespace: home-server
+  nfs:
+    server: rclone-seedbox.home-server.svc.cluster.local
+    path: /
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -35,4 +24,4 @@ spec:
     requests:
       storage: 500Gi
   volumeName: pv-seedbox
-  storageClassName: smb
+  storageClassName: ""

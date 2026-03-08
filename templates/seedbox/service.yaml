@@ -7,6 +7,7 @@ spec:
   selector:
     app: rclone-seedbox
   ports:
-    - port: 445
-      targetPort: 445
+    - port: 2049
+      targetPort: 2049
+      name: nfs
   type: ClusterIP

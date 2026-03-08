@@ -18,11 +18,9 @@ spec:
         image: rclone/rclone:1.68.2
         args:
           - serve
-          - smb
+          - nfs
           - :sftp,host=$(FTP_HOST),user=$(FTP_USER),pass=$(FTP_PASS),port=$(FTP_PORT):/storage/watch/qbittorrent
-          - --addr=0.0.0.0:445
-          - --smb-user=$(SMB_USER)
-          - --smb-password=$(SMB_PASS)
+          - --addr=0.0.0.0:2049
           - --vfs-cache-mode=writes
           - --vfs-cache-max-size=10G
           - --log-level=INFO
@@ -47,19 +45,9 @@ spec:
               secretKeyRef:
                 name: seedbox-ftp-creds
                 key: password
-          - name: SMB_USER
-            valueFrom:
-              secretKeyRef:
-                name: seedbox-smb-creds
-                key: username
-          - name: SMB_PASS
-            valueFrom:
-              secretKeyRef:
-                name: seedbox-smb-creds
-                key: password
         ports:
-          - containerPort: 445
-            name: smb
+          - containerPort: 2049
+            name: nfs
         resources:
           requests:
             memory: "256Mi"
