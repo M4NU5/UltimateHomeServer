@@ -8,12 +8,8 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - port=30049
-    - mountport=30049
-    - nfsvers=3
   nfs:
-    server: 127.0.0.1    # always valid on single node k3s
+    server: 127.0.0.1    # host network, always valid on single node
     path: /
 ---
 apiVersion: v1

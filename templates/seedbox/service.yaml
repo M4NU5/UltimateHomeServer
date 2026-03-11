@@ -6,9 +6,8 @@ metadata:
 spec:
   selector:
     app: rclone-seedbox
-  type: NodePort
   ports:
     - port: 2049
       targetPort: 2049
-      nodePort: 30049    # fixed port, defined in Git
       name: nfs
+  type: ClusterIP
