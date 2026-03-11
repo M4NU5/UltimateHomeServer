@@ -27,7 +27,7 @@ storage:
 
 services:
     traefik:
-        # domain loaded from sealed secret: traefik-domain
+        domain: bongofett.com
         namespace: home-server
         ports:
             http: 80
