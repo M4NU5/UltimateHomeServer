@@ -4,7 +4,7 @@ metadata:
   name: letsencrypt-dns01
 spec:
   acme:
-    email: REDACTED
+    email: balls@bongofett.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: le-dns01-account-key
