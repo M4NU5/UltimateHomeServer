@@ -9,11 +9,12 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   mountOptions:
-    - nfsvers=4
+    - port=30049
+    - mountport=30049
+    - nfsvers=3
   nfs:
     server: 127.0.0.1    # always valid on single node k3s
     path: /
-    port: 30049          # matches NodePort above
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
