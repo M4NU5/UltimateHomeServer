@@ -24,6 +24,7 @@ spec:
           - :sftp,host=$(FTP_HOST),user=$(FTP_USER),pass=$(FTP_PASS),port=$(FTP_PORT):/storage/watch/qbittorrent
           - /mnt/seedbox
           - --allow-other
+          - --allow-non-empty
           - --vfs-cache-mode=writes
           - --vfs-cache-max-size=10G
           - --log-level=INFO
