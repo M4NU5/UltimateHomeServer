@@ -53,6 +53,7 @@ spec:
             path: "{{ .Values.services.qbittorrent.config }}"
             type: DirectoryOrCreate
         - name: seedbox
-          persistentVolumeClaim:
-            claimName: {{ .Values.storage.seedbox.pvcClaimName }}
+          hostPath:
+            path: /mnt/seedbox          # direct host path - no PVC needed
+            type: DirectoryOrCreate
 {{- end }}

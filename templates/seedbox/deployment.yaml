@@ -13,19 +13,21 @@ spec:
       labels:
         app: rclone-seedbox
     spec:
-      hostNetwork: true          # share host network namespace
-      dnsPolicy: ClusterFirstWithHostNet  # keep cluster DNS working
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       containers:
       - name: rclone
         image: rclone/rclone:1.68.2
-        args:
-          - serve
-          - nfs
+        command:
+          - rclone
+          - mount
           - :sftp,host=$(FTP_HOST),user=$(FTP_USER),pass=$(FTP_PASS),port=$(FTP_PORT):/storage/watch/qbittorrent
-          - --addr=0.0.0.0:2049
+          - /mnt/seedbox
+          - --allow-other
           - --vfs-cache-mode=writes
           - --vfs-cache-max-size=10G
           - --log-level=INFO
+          - --no-check-certificate
         env:
           - name: FTP_HOST
             valueFrom:
@@ -47,10 +49,10 @@ spec:
               secretKeyRef:
                 name: seedbox-ftp-creds
                 key: password
-        ports:
-          - containerPort: 2049
-            hostPort: 2049       # bind directly to host port
-            name: nfs
+        volumeMounts:
+          - name: seedbox-mount
+            mountPath: /mnt/seedbox
+            mountPropagation: Bidirectional   # propagates FUSE mount to host
         resources:
           requests:
             memory: "256Mi"
@@ -59,6 +61,11 @@ spec:
             memory: "1Gi"
             cpu: "500m"
         securityContext:
+          privileged: true
           capabilities:
             add: ["SYS_ADMIN"]
-          privileged: true
+      volumes:
+        - name: seedbox-mount
+          hostPath:
+            path: /mnt/seedbox
+            type: DirectoryOrCreate

@@ -23,8 +23,7 @@ storage:
         smbAddress: //192.168.0.2/NASty
         # smbAddress loaded from sealed secret: smb-address
     seedbox:
-        pvcClaimName: pvc-seedbox
-        pvName: pv-seedbox
+        hostPath: /mnt/seedbox    # simple host path, no PVC
 
 services:
     traefik:
