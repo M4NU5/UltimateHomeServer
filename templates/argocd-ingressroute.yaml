@@ -20,4 +20,3 @@ spec:
           namespace: home-server
   tls:
     secretName: bongofett-cert
-    namespace: home-server
