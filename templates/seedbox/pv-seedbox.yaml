@@ -8,9 +8,12 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - nfsvers=4
   nfs:
-    server: rclone-seedbox.home-server.svc.cluster.local
+    server: 127.0.0.1    # always valid on single node k3s
     path: /
+    port: 30049          # matches NodePort above
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
