@@ -14,7 +14,7 @@ spec:
       services:
         - kind: Service
           name: argocd-server
-          port: 80
+          port: 443
       middlewares:
         - name: default-headers
   tls:
