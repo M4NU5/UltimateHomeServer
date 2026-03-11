@@ -14,8 +14,10 @@ spec:
       services:
         - kind: Service
           name: argocd-server
-          port: 443
+          port: 80
       middlewares:
         - name: default-headers
+          namespace: home-server
   tls:
     secretName: bongofett-cert
+    namespace: home-server
