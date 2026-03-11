@@ -7,13 +7,25 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default
-  source:
-    repoURL: https://charts.jetstack.io
-    chart: cert-manager
-    targetRevision: v1.14.4
-    helm:
-      values: |
-        installCRDs: true
+  sources:
+    - repoURL: https://charts.jetstack.io
+      chart: cert-manager
+      targetRevision: v1.14.4
+      helm:
+        values: |
+          installCRDs: true
+    - repoURL: https://github.com/M4NU5/UltimateHomeServer
+      targetRevision: HEAD
+      path: cert-manager
+      plugin:
+        name: argocd-vault-plugin
+        env:
+          - name: AVP_TYPE
+            value: kubernetessecret
+          - name: AVP_SECRET_NAME
+            value: argocd-private-values
+          - name: AVP_SECRET_NAMESPACE
+            value: argocd
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager
