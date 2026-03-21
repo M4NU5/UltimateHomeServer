@@ -50,6 +50,14 @@ spec:
               secretKeyRef:
                 name: seedbox-ftp-creds
                 key: password
+        livenessProbe:        
+            exec:
+              command:
+                - stat
+                - /mnt/seedbox
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3  
         volumeMounts:
           - name: seedbox-mount
             mountPath: /mnt/seedbox
