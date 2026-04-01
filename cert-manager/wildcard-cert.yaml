@@ -5,6 +5,9 @@ metadata:
   namespace: home-server
 spec:
   secretName: bongofett-cert
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
   dnsNames:
     - bongofett.com
     - "*.bongofett.com"
