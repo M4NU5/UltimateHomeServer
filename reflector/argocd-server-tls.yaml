@@ -6,6 +6,3 @@ metadata:
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: "home-server/bongofett-cert"
 type: kubernetes.io/tls
-data:
-  tls.crt: ""
-  tls.key: ""
