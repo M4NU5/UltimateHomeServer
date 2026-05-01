@@ -130,6 +130,28 @@ services:
         config: /var/lib/k3s/config/bazarr
         data: /data
 
+    changedetectionio:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: ghcr.io/dgtlmoon/changedetection.io
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 5000
+        config: /opt/changedetectionio/config
+
+    playwright:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: browserless/chrome
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 3000
+        config: /opt/playwright/config
+
     qbittorrent:
         enabled: false
         replicaCount: 1
@@ -159,8 +181,6 @@ services:
         enabled: false
     unpackerr:
         enabled: false
-    changedetectionio:
-        enabled: false
     huginn:
         enabled: false
     gotify:
@@ -168,8 +188,6 @@ services:
     sabnzbd:
         enabled: false
     kavita:
-        enabled: false
-    playwright:
         enabled: false
     apprise:
         enabled: false
