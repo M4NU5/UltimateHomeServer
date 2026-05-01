@@ -46,5 +46,5 @@ spec:
         - name: playwright-config
           hostPath:
             path: "{{ .Values.services.playwright.config }}"
-            type: Directory
+            type: DirectoryOrCreate
 {{- end }}

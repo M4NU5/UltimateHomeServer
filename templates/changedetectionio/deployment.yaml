@@ -44,5 +44,5 @@ spec:
         - name: changedetectionio-config
           hostPath:
             path: "{{ .Values.services.changedetectionio.config }}"
-            type: Directory
+            type: DirectoryOrCreate
 {{- end }}
