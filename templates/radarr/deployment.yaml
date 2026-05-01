@@ -41,6 +41,7 @@ spec:
               mountPath: {{ .Values.services.radarr.data }}
             - name: seedbox
               mountPath: {{ .Values.services.radarr.seedbox }}
+              mountPropagation: HostToContainer
       volumes:
         - name: radarr-config
           hostPath:

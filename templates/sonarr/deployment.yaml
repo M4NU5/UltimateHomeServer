@@ -41,6 +41,7 @@ spec:
               mountPath: {{ .Values.services.sonarr.data }}
             - name: seedbox
               mountPath: {{ .Values.services.sonarr.seedbox }}
+              mountPropagation: HostToContainer
       volumes:
         - name: sonarr-config
           hostPath:
