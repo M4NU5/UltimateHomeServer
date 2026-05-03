@@ -1,0 +1,18 @@
+{{- if .Values.services.tdarr.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: tdarr
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app.kubernetes.io/name: tdarr
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: {{ .Values.services.tdarr.ports.http }}
+      targetPort: http
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: tdarr
+{{- end }}

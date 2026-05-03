@@ -152,6 +152,22 @@ services:
             http: 3000
         config: /opt/playwright/config
 
+    tdarr:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: haveagitgat/tdarr
+            tag: latest
+            pullPolicy: Always
+        ports:
+            http: 8265
+            server: 8266
+        config: /var/lib/k3s/config/tdarr
+        cache: /var/lib/k3s/cache/tdarr
+        data: /media
+        ffmpegVersion: "7"
+        nodeName: InternalNode
+
     qbittorrent:
         enabled: false
         replicaCount: 1

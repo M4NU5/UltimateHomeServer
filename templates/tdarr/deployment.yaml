@@ -1,0 +1,87 @@
+{{- if .Values.services.tdarr.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdarr
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app.kubernetes.io/name: tdarr
+spec:
+  revisionHistoryLimit: 3
+  replicas: {{ .Values.services.tdarr.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tdarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tdarr
+    spec:
+      containers:
+        - name: tdarr
+          image: "{{ .Values.services.tdarr.image.repository }}:{{ .Values.services.tdarr.image.tag }}"
+          imagePullPolicy: {{ .Values.services.tdarr.image.pullPolicy }}
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "{{ .Values.common.tz }}"
+            - name: UMASK_SET
+              value: "002"
+            - name: serverIP
+              value: "0.0.0.0"
+            - name: serverPort
+              value: "{{ .Values.services.tdarr.ports.server }}"
+            - name: webUIPort
+              value: "{{ .Values.services.tdarr.ports.http }}"
+            - name: internalNode
+              value: "true"
+            - name: inContainer
+              value: "true"
+            - name: nodeName
+              value: "{{ .Values.services.tdarr.nodeName }}"
+            - name: ffmpegVersion
+              value: "{{ .Values.services.tdarr.ffmpegVersion }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.services.tdarr.ports.http }}
+              protocol: TCP
+            - name: server
+              containerPort: {{ .Values.services.tdarr.ports.server }}
+              protocol: TCP
+          volumeMounts:
+            - name: tdarr-server
+              mountPath: /app/server
+            - name: tdarr-configs
+              mountPath: /app/configs
+            - name: tdarr-logs
+              mountPath: /app/logs
+            - name: tdarr-temp
+              mountPath: /temp
+            - name: smb
+              mountPath: {{ .Values.services.tdarr.data }}
+      volumes:
+        - name: tdarr-server
+          hostPath:
+            path: "{{ .Values.services.tdarr.config }}/server"
+            type: DirectoryOrCreate
+        - name: tdarr-configs
+          hostPath:
+            path: "{{ .Values.services.tdarr.config }}/configs"
+            type: DirectoryOrCreate
+        - name: tdarr-logs
+          hostPath:
+            path: "{{ .Values.services.tdarr.config }}/logs"
+            type: DirectoryOrCreate
+        - name: tdarr-temp
+          hostPath:
+            path: "{{ .Values.services.tdarr.cache }}"
+            type: DirectoryOrCreate
+        - name: smb
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.smb.pvcClaimName }}
+{{- end }}
