@@ -37,11 +37,11 @@ spec:
               containerPort: {{ .Values.services.changedetectionio.ports.http }}
               protocol: TCP
           volumeMounts:
-            - name: changedetectionio-config
-              mountPath: /config
+            - name: changedetectionio-datastore
+              mountPath: /datastore
 
       volumes:
-        - name: changedetectionio-config
+        - name: changedetectionio-datastore
           hostPath:
             path: "{{ .Values.services.changedetectionio.config }}"
             type: DirectoryOrCreate

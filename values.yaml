@@ -139,7 +139,7 @@ services:
             pullPolicy: Always
         ports:
             http: 5000
-        config: /opt/changedetectionio/config
+        config: /var/lib/k3s/config/changedetectionio
 
     playwright:
         enabled: true
