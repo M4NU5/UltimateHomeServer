@@ -4,6 +4,11 @@ kind: SealedSecret
 metadata:
   name: smb-creds
   namespace: home-server
+  annotations:
+    reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+    reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: ".*"
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+    reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: ".*"
 spec:
   encryptedData:
     password: AgBNFEQ/HRecWG12ThS7dq2Nici/hRL4wlUn+y9sj0bxNIrbjB8qzAgarr4bvUtw1B5hVU77X193gVVOuWKGrIcUqBf20P489MN57OqrXywRrpxON49Sc3xrQAD6R6QtgXLSDBhK9FMqElpwSYDQKcy2uza6f38mwx70JW0L4fwlmwIUCVB8fQXJd6fJNem9e+AA+lRV5I4Wby5AMDlNIoOLEkz3hQGKARR2usgpSFb/edxdm/0YQ2NNLElsIX+4VJ6K5S85MHf9fqCz8txGlrYg4SRF0NJHjZO++0UnVfYKE7d3LKGTN883Ig8xBU1gLDRqTTL2YhjBKwVg8h+KNaKfqXLCKRbvyFm38lnskv7b4cdIznBeNApjq7FbfL0FRISKu4RDVpVuMISGG0MMtiwVijQfKpQyHDzPAtQetYE7zJpmuRxJ8109eGZhnZjfDB64S0CJ0motqvbSX2LqZKPooUi2oYamxFqx8r91LRbvdWox/+cnjs2eOx1AklGtfWOxISDZ9gZDaGhKeKjV0ZcIY0eyMY62L3mCAcnfnDcORDupVMoT+ISBoVKewFQOHHsVDVr+jNwiJAf5JcxtCPoP8A5wAap6lYbePixUCbWIAemA/RJeYa3gy4MwR5lfLnMFTgRqA9jlWutWObtTbbo7QRPi1nEqa/D5OrWqYu2x4gt6jqRy4zOjj1MK+PHgu/ayv31Fxvaf7RumPr/eHdjiIZk3
