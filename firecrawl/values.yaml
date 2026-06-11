@@ -1,0 +1,48 @@
+image:
+  repository: ghcr.io/firecrawl/firecrawl
+  tag: latest
+  pullPolicy: Always
+  dockerSecretEnabled: false
+
+api:
+  replicaCount: 1
+
+worker:
+  replicaCount: 1
+
+extractWorker:
+  enabled: false
+
+nuqWorker:
+  replicaCount: 1
+
+nuqPrefetchWorker:
+  enabled: false
+
+nuqPostgres:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/firecrawl/nuq-postgres
+    tag: latest
+    pullPolicy: Always
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: local-path
+
+playwright:
+  repository: ghcr.io/firecrawl/playwright-service
+  tag: latest
+  pullPolicy: Always
+  replicaCount: 1
+
+service:
+  api:
+    type: ClusterIP
+    port: 3002
+
+config:
+  NUQ_WORKER_COUNT: "1"
+  FIRECRAWL_APP_SCHEME: "https"
+  FIRECRAWL_APP_HOST: "firecrawl.bongofett.com"
+  FIRECRAWL_APP_PORT: ""

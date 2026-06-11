@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: firecrawl
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/firecrawl/firecrawl
+      targetRevision: 2ecfb8d3ff343ed20c178d4f168bb114588c6177
+      path: examples/kubernetes/firecrawl-helm
+      helm:
+        releaseName: firecrawl
+        valueFiles:
+          - $values/firecrawl/values.yaml
+    - repoURL: https://github.com/M4NU5/UltimateHomeServer
+      targetRevision: HEAD
+      ref: values
+    - repoURL: https://github.com/M4NU5/UltimateHomeServer
+      targetRevision: HEAD
+      path: firecrawl/extra
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: firecrawl
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

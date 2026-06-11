@@ -1,0 +1,10 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: firecrawl-allow-hermes
+  namespace: firecrawl
+spec:
+  ipAllowList:
+    sourceRange:
+      # Replace with Hermes VM /32 once its address is reserved.
+      - 192.168.0.0/24

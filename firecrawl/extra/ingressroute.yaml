@@ -1,0 +1,19 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: firecrawl
+  namespace: firecrawl
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`firecrawl.bongofett.com`)
+      services:
+        - kind: Service
+          name: firecrawl-firecrawl-api
+          port: 3002
+      middlewares:
+        - name: firecrawl-allow-hermes
+  tls:
+    secretName: bongofett-cert
