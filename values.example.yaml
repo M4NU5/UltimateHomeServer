@@ -41,11 +41,11 @@ services:
         replicaCount: 1
         image:
             repository: ghcr.io/dgtlmoon/changedetection.io
-            tag: latest
-            pullPolicy: Always
+            tag: latest@sha256:736331d2787f94d3201b64aa641e090f67e28577ba505bd7ba5d7c1841e1e0ca
+            pullPolicy: IfNotPresent
         ports:
             http: 5000
-        config: /opt/changedetectionio/config
+        config: /var/lib/k3s/config/changedetectionio
     cloudflared:
         enabled: false
         replicaCount: 1
