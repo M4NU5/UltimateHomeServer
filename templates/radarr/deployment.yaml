@@ -39,6 +39,7 @@ spec:
               mountPath: /config
             - name: smb
               mountPath: {{ .Values.services.radarr.data }}
+              subPath: data          # share content root is the data/ subfolder
             - name: seedbox
               mountPath: {{ .Values.services.radarr.seedbox }}
               mountPropagation: HostToContainer

@@ -39,6 +39,7 @@ spec:
               mountPath: /config
             - name: smb
               mountPath: {{ .Values.services.bazarr.data }}
+              subPath: data          # share content root is the data/ subfolder
       volumes:
         - name: bazarr-config
           hostPath:
