@@ -41,6 +41,12 @@ spec:
           env:
             - name: TZ
               value: "{{ .Values.common.tz }}"
+          envFrom:
+            # Optional: supplies HOMEPAGE_VAR_* API keys for the service widgets.
+            # Pod starts fine without it (optional: true); widgets show live once present.
+            - secretRef:
+                name: homepage-secrets
+                optional: true
           ports:
             - name: http
               containerPort: {{ .Values.services.homepage.ports.http }}

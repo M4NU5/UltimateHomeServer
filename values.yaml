@@ -43,30 +43,145 @@ services:
             pullPolicy: Always
         ports:
             http: 3000
+        # API keys for the service widgets below are injected as env vars
+        # from an OPTIONAL secret named `homepage-secrets` (see deployment.yaml).
+        # Until it exists the tiles still render with a live up/down dot (ping);
+        # the stat widgets light up once the HOMEPAGE_VAR_* keys are provided.
         bookmarks:
             - Development:
-                - github:
+                - GitHub:
                     - icon: mdi-github
-                    - abbr: gh
-                    - href: https://github.com
+                    - abbr: GH
+                    - href: https://github.com/M4NU5/UltimateHomeServer
+                - ArgoCD:
+                    - icon: argocd
+                    - abbr: CD
+                    - href: https://argocd.bongofett.com
             - Media:
-                - youtube:
+                - YouTube:
                     - icon: mdi-youtube
-                    - abbr: yt
+                    - abbr: YT
                     - href: https://youtube.com
+                - Overseerr:
+                    - icon: overseerr
+                    - abbr: OV
+                    - href: https://overseerr.bongofett.com
+            - Quick Links:
+                - Router:
+                    - abbr: RT
+                    - href: http://192.168.0.1
+                - NAS:
+                    - abbr: NAS
+                    - href: http://192.168.0.2
         services:
             - Media:
-                - jellyfin:
+                - Jellyfin:
                     - icon: jellyfin
-                    - description: Jellyfin
+                    - href: https://jellyfin.bongofett.com
+                    - description: Movies & TV streaming
+                    - ping: http://jellyfin.home-server.svc.cluster.local:8096
+                    - widget:
+                        type: jellyfin
+                        url: http://jellyfin.home-server.svc.cluster.local:8096
+                        key: "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}"
+                        enableBlocks: true
+                        enableNowPlaying: true
+                - Tdarr:
+                    - icon: tdarr
+                    - href: https://tdarr.bongofett.com
+                    - description: Transcode automation
+                    - ping: http://tdarr.home-server.svc.cluster.local:8265
+                    - widget:
+                        type: tdarr
+                        url: http://tdarr.home-server.svc.cluster.local:8265
+            - Automation:
+                - Sonarr:
+                    - icon: sonarr
+                    - href: https://sonarr.bongofett.com
+                    - description: TV series
+                    - ping: http://sonarr.home-server.svc.cluster.local:8989
+                    - widget:
+                        type: sonarr
+                        url: http://sonarr.home-server.svc.cluster.local:8989
+                        key: "{{HOMEPAGE_VAR_SONARR_API_KEY}}"
+                - Radarr:
+                    - icon: radarr
+                    - href: https://radarr.bongofett.com
+                    - description: Movies
+                    - ping: http://radarr.home-server.svc.cluster.local:7878
+                    - widget:
+                        type: radarr
+                        url: http://radarr.home-server.svc.cluster.local:7878
+                        key: "{{HOMEPAGE_VAR_RADARR_API_KEY}}"
+                - Prowlarr:
+                    - icon: prowlarr
+                    - href: https://prowlarr.bongofett.com
+                    - description: Indexer manager
+                    - ping: http://prowlarr.home-server.svc.cluster.local:9696
+                    - widget:
+                        type: prowlarr
+                        url: http://prowlarr.home-server.svc.cluster.local:9696
+                        key: "{{HOMEPAGE_VAR_PROWLARR_API_KEY}}"
+                - Bazarr:
+                    - icon: bazarr
+                    - href: https://bazarr.bongofett.com
+                    - description: Subtitles
+                    - ping: http://bazarr.home-server.svc.cluster.local:6767
+                    - widget:
+                        type: bazarr
+                        url: http://bazarr.home-server.svc.cluster.local:6767
+                        key: "{{HOMEPAGE_VAR_BAZARR_API_KEY}}"
+            - Infrastructure:
+                - ArgoCD:
+                    - icon: argocd
+                    - href: https://argocd.bongofett.com
+                    - description: GitOps deployments
+                - Firecrawl:
+                    - icon: mdi-fire
+                    - description: Web scraping API
+                    - ping: http://firecrawl-api.firecrawl.svc.cluster.local:3002
         widgets:
+            - greeting:
+                text_size: xl
+                text: Bongofett Home Server
+            - kubernetes:
+                cluster:
+                    show: true
+                    cpu: true
+                    memory: true
+                    showLabel: true
+                    label: cluster
+                nodes:
+                    show: true
+                    cpu: true
+                    memory: true
+                    showLabel: true
             - search:
+                provider: google
                 focus: true
-                provider: '[duckduckgo, google]'
                 target: _blank
+            - datetime:
+                text_size: xl
+                format:
+                    timeStyle: short
+                    dateStyle: long
         settings:
+            title: Bongofett Home Server
             theme: dark
-            title: Homepage
+            color: slate
+            headerStyle: boxed
+            statusStyle: dot
+            hideVersion: true
+            layout:
+                Media:
+                    style: row
+                    columns: 2
+                Automation:
+                    style: row
+                    columns: 4
+                Infrastructure:
+                    style: row
+                    columns: 2
 
     jellyfin:
         enabled: true
@@ -131,7 +246,7 @@ services:
         data: /data
 
     changedetectionio:
-        enabled: true
+        enabled: false
         replicaCount: 1
         image:
             repository: ghcr.io/dgtlmoon/changedetection.io

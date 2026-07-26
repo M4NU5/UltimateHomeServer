@@ -31,6 +31,24 @@ rules:
     verbs:
       - get
       - list
+  # Homepage probes for the Traefik IngressRoute CRDs during service discovery.
+  # Without this it logs a 403 on every startup (harmless, but it's pure noise).
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+      - customresourcedefinitions/status
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - traefik.io
+      - traefik.containo.us
+    resources:
+      - ingressroutes
+    verbs:
+      - get
+      - list
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
