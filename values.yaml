@@ -47,99 +47,102 @@ services:
         # from an OPTIONAL secret named `homepage-secrets` (see deployment.yaml).
         # Until it exists the tiles still render with a live up/down dot (ping);
         # the stat widgets light up once the HOMEPAGE_VAR_* keys are provided.
+        # NOTE ON SHAPE (https://gethomepage.dev/configs/): bookmarks and services
+        # nest differently, and getting it wrong silently drops every property.
+        #   bookmarks -> group -> name -> a LIST holding ONE map (abbr/href/icon together)
+        #   services  -> group -> name -> a MAP directly (icon/href/ping/widget as keys)
+        # The old "- icon:" / "- href:" style made homepage parse each property as a
+        # separate list entry, so it only ever saw the name: bare, unlinked tiles.
         bookmarks:
             - Development:
                 - GitHub:
-                    - icon: mdi-github
                     - abbr: GH
-                    - href: https://github.com/M4NU5/UltimateHomeServer
+                      href: https://github.com/M4NU5/UltimateHomeServer
+                      icon: mdi-github
                 - ArgoCD:
-                    - icon: argocd
                     - abbr: CD
-                    - href: https://argocd.bongofett.com
+                      href: https://argocd.bongofett.com
+                      icon: argocd
             - Media:
                 - YouTube:
-                    - icon: mdi-youtube
                     - abbr: YT
-                    - href: https://youtube.com
-                - Overseerr:
-                    - icon: overseerr
-                    - abbr: OV
-                    - href: https://overseerr.bongofett.com
+                      href: https://youtube.com
+                      icon: mdi-youtube
             - Quick Links:
                 - Router:
                     - abbr: RT
-                    - href: http://192.168.0.1
+                      href: http://192.168.0.1
                 - NAS:
                     - abbr: NAS
-                    - href: http://192.168.0.2
+                      href: http://192.168.0.2
         services:
             - Media:
                 - Jellyfin:
-                    - icon: jellyfin
-                    - href: https://jellyfin.bongofett.com
-                    - description: Movies & TV streaming
-                    - ping: http://jellyfin.home-server.svc.cluster.local:8096
-                    - widget:
+                    icon: jellyfin
+                    href: https://jellyfin.bongofett.com
+                    description: Movies & TV streaming
+                    ping: http://jellyfin.home-server.svc.cluster.local:8096
+                    widget:
                         type: jellyfin
                         url: http://jellyfin.home-server.svc.cluster.local:8096
                         key: "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}"
                         enableBlocks: true
                         enableNowPlaying: true
                 - Tdarr:
-                    - icon: tdarr
-                    - href: https://tdarr.bongofett.com
-                    - description: Transcode automation
-                    - ping: http://tdarr.home-server.svc.cluster.local:8265
-                    - widget:
+                    icon: tdarr
+                    href: https://tdarr.bongofett.com
+                    description: Transcode automation
+                    ping: http://tdarr.home-server.svc.cluster.local:8265
+                    widget:
                         type: tdarr
                         url: http://tdarr.home-server.svc.cluster.local:8265
             - Automation:
                 - Sonarr:
-                    - icon: sonarr
-                    - href: https://sonarr.bongofett.com
-                    - description: TV series
-                    - ping: http://sonarr.home-server.svc.cluster.local:8989
-                    - widget:
+                    icon: sonarr
+                    href: https://sonarr.bongofett.com
+                    description: TV series
+                    ping: http://sonarr.home-server.svc.cluster.local:8989
+                    widget:
                         type: sonarr
                         url: http://sonarr.home-server.svc.cluster.local:8989
                         key: "{{HOMEPAGE_VAR_SONARR_API_KEY}}"
                 - Radarr:
-                    - icon: radarr
-                    - href: https://radarr.bongofett.com
-                    - description: Movies
-                    - ping: http://radarr.home-server.svc.cluster.local:7878
-                    - widget:
+                    icon: radarr
+                    href: https://radarr.bongofett.com
+                    description: Movies
+                    ping: http://radarr.home-server.svc.cluster.local:7878
+                    widget:
                         type: radarr
                         url: http://radarr.home-server.svc.cluster.local:7878
                         key: "{{HOMEPAGE_VAR_RADARR_API_KEY}}"
                 - Prowlarr:
-                    - icon: prowlarr
-                    - href: https://prowlarr.bongofett.com
-                    - description: Indexer manager
-                    - ping: http://prowlarr.home-server.svc.cluster.local:9696
-                    - widget:
+                    icon: prowlarr
+                    href: https://prowlarr.bongofett.com
+                    description: Indexer manager
+                    ping: http://prowlarr.home-server.svc.cluster.local:9696
+                    widget:
                         type: prowlarr
                         url: http://prowlarr.home-server.svc.cluster.local:9696
                         key: "{{HOMEPAGE_VAR_PROWLARR_API_KEY}}"
                 - Bazarr:
-                    - icon: bazarr
-                    - href: https://bazarr.bongofett.com
-                    - description: Subtitles
-                    - ping: http://bazarr.home-server.svc.cluster.local:6767
-                    - widget:
+                    icon: bazarr
+                    href: https://bazarr.bongofett.com
+                    description: Subtitles
+                    ping: http://bazarr.home-server.svc.cluster.local:6767
+                    widget:
                         type: bazarr
                         url: http://bazarr.home-server.svc.cluster.local:6767
                         key: "{{HOMEPAGE_VAR_BAZARR_API_KEY}}"
             - Infrastructure:
                 - ArgoCD:
-                    - icon: argocd
-                    - href: https://argocd.bongofett.com
-                    - description: GitOps deployments
+                    icon: argocd
+                    href: https://argocd.bongofett.com
+                    description: GitOps deployments
                 - Firecrawl:
-                    - icon: mdi-fire
-                    - description: Web scraping API
-                    - ping: http://firecrawl-api.firecrawl.svc.cluster.local:3002
+                    icon: mdi-fire
+                    href: https://firecrawl.bongofett.com
+                    description: Web scraping API
+                    ping: http://firecrawl-firecrawl-api.firecrawl.svc.cluster.local:3002
         widgets:
             - greeting:
                 text_size: xl
