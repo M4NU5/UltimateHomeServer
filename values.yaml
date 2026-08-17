@@ -50,6 +50,7 @@ services:
         #   HOMEPAGE_VAR_JELLYFIN_API_KEY   HOMEPAGE_VAR_PROWLARR_API_KEY
         #   HOMEPAGE_VAR_SONARR_API_KEY     HOMEPAGE_VAR_BAZARR_API_KEY
         #   HOMEPAGE_VAR_RADARR_API_KEY     HOMEPAGE_VAR_OMV_USERNAME/_PASSWORD
+        #   HOMEPAGE_VAR_QBIT_USERNAME/_PASSWORD (seedbox qBittorrent web UI)
         # Until it exists the tiles still render with a live up/down dot (ping) and
         # Kubernetes CPU/mem; only the stat widgets stay empty.
         # `namespace` + `app` on a service pull per-pod CPU/memory via the cluster
@@ -177,6 +178,24 @@ services:
                         username: "{{HOMEPAGE_VAR_OMV_USERNAME}}"
                         password: "{{HOMEPAGE_VAR_OMV_PASSWORD}}"
                         method: services.getStatus
+            - Seedbox:
+                # Off-cluster (Giga-Rapid). No `namespace`/`app` — there are no pods to
+                # read stats from — and `siteMonitor` instead of `ping`, because the
+                # provider drops ICMP but answers HTTPS.
+                - qBittorrent:
+                    icon: qbittorrent
+                    href: https://qbittorrent-jacksparrow69.daredevil.mygiga.cloud/
+                    description: Seedbox torrent client
+                    siteMonitor: https://qbittorrent-jacksparrow69.daredevil.mygiga.cloud/
+                    widget:
+                        type: qbittorrent
+                        url: https://qbittorrent-jacksparrow69.daredevil.mygiga.cloud
+                        username: "{{HOMEPAGE_VAR_QBIT_USERNAME}}"
+                        password: "{{HOMEPAGE_VAR_QBIT_PASSWORD}}"
+                - Giga-Rapid:
+                    icon: mdi-server-network
+                    href: https://dash.giga-rapid.com/services/id/9891
+                    description: Seedbox control panel
         widgets:
             - greeting:
                 text_size: xl
@@ -219,6 +238,9 @@ services:
                 Infrastructure:
                     style: row
                     columns: 3
+                Seedbox:
+                    style: row
+                    columns: 2
 
     jellyfin:
         enabled: true
