@@ -23,8 +23,9 @@ storage:
         pvName: pv-media
         storageClass: local-media
         capacity: 3.6Ti
-        # ext4 disk passed through to the VM from the Hyper-V host
-        hostPath: /mnt/media
+        # ext4 disk passed through from the Hyper-V host, mounted at /mnt/media.
+        # The share root is the nasty/ subfolder, as the Pi exported it.
+        hostPath: /mnt/media/nasty
         node: k3s-master
     seedbox:
         hostPath: /mnt/seedbox    # simple host path, no PVC
