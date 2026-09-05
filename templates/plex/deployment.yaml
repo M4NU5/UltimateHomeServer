@@ -38,13 +38,13 @@ spec:
           volumeMounts:
             - name: plex-config
               mountPath: "/config"
-            - name: smb
+            - name: media
               subPath: "{{ .Values.services.plex.library }}"
               mountPath: /library
       volumes:
-        - name: smb
+        - name: media
           persistentVolumeClaim:
-            claimName: {{ .Values.storage.smb.pvcClaimName }}
+            claimName: {{ .Values.storage.media.pvcClaimName }}
         - name: plex-config
           hostPath:
             path: "{{ .Values.services.plex.config }}"

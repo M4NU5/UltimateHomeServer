@@ -37,7 +37,7 @@ spec:
           volumeMounts:
             - name: radarr-config
               mountPath: /config
-            - name: smb
+            - name: media
               mountPath: {{ .Values.services.radarr.data }}
               subPath: data          # share content root is the data/ subfolder
             - name: seedbox
@@ -48,9 +48,9 @@ spec:
           hostPath:
             path: "{{ .Values.services.radarr.config }}"
             type: DirectoryOrCreate
-        - name: smb
+        - name: media
           persistentVolumeClaim:
-            claimName: {{ .Values.storage.smb.pvcClaimName }}
+            claimName: {{ .Values.storage.media.pvcClaimName }}
         - name: seedbox
           hostPath:
             path: /mnt/seedbox          # direct host path - no PVC needed

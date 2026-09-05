@@ -17,11 +17,15 @@ certManager:
         # email loaded from sealed secret: cert-manager-email
 
 storage:
-    smb:
-        pvcClaimName: pvc-smb
-        pvName: pv-smb
-        smbAddress: //192.168.1.2/NASty
-        # smbAddress loaded from sealed secret: smb-address
+    media:
+        enabled: true
+        pvcClaimName: pvc-media
+        pvName: pv-media
+        storageClass: local-media
+        capacity: 3.6Ti
+        # ext4 disk passed through to the VM from the Hyper-V host
+        hostPath: /mnt/media
+        node: k3s-master
     seedbox:
         hostPath: /mnt/seedbox    # simple host path, no PVC
 

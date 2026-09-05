@@ -1,0 +1,46 @@
+{{- if .Values.storage.media.enabled }}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Values.storage.media.storageClass }}
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.storage.media.pvName }}
+spec:
+  capacity:
+    storage: {{ .Values.storage.media.capacity }}
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ .Values.storage.media.storageClass }}
+  local:
+    path: {{ .Values.storage.media.hostPath }}
+  # A local PV is pinned to the node holding the disk. Single-node cluster, but
+  # this is required — without it the scheduler will not bind the claim.
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - {{ .Values.storage.media.node }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.storage.media.pvcClaimName }}
+  namespace: {{ .Values.common.namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.storage.media.capacity }}
+  volumeName: {{ .Values.storage.media.pvName }}
+  storageClassName: {{ .Values.storage.media.storageClass }}
+{{- end }}

@@ -46,7 +46,7 @@ Container paths: `/config` (app config, hostPath), `/data` (media library, PVC),
 Host paths: `/var/lib/k3s/config/<svc>` for config, `/var/lib/k3s/cache/<svc>` for large
 transient caches (keep these off the SMB PVC), `/mnt/seedbox` for the rclone mount.
 
-Never hardcode: use `.Values.common.namespace`, `.Values.storage.smb.pvcClaimName`, and
+Never hardcode: use `.Values.common.namespace`, `.Values.storage.media.pvcClaimName`, and
 `.Values.services.traefik.domain`.
 
 ## Safety rules (these have caused outages)
