@@ -9,11 +9,15 @@ common:
         ssl_dhparam: /etc/letsencrypt/certs/dhparam.pem
 
 storage:
-    smb:
-        namespace: default
-        pvcClaimName: pvc-plex-smb
-        pvName: pv-plex-smb
-        smbAddress: //192.168.0.2/example # Change this to your SMB IP and share name
+    media:
+        enabled: true
+        pvcClaimName: pvc-media
+        pvName: pv-media
+        storageClass: local-media
+        capacity: 1Ti
+        # Path on the node holding the disk. Change to wherever your library mounts.
+        hostPath: /mnt/media
+        node: my-node-name
 
 services:
     apprise:
