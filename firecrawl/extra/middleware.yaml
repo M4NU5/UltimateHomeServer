@@ -7,4 +7,4 @@ spec:
   ipAllowList:
     sourceRange:
       # Replace with Hermes VM /32 once its address is reserved.
-      - 192.168.0.0/24
+      - 192.168.1.0/24

@@ -20,7 +20,7 @@ storage:
     smb:
         pvcClaimName: pvc-smb
         pvName: pv-smb
-        smbAddress: //192.168.0.2/NASty
+        smbAddress: //192.168.1.2/NASty
         # smbAddress loaded from sealed secret: smb-address
     seedbox:
         hostPath: /mnt/seedbox    # simple host path, no PVC
@@ -169,12 +169,12 @@ services:
                     podSelector: ""
                 - NAS:
                     icon: openmediavault
-                    href: http://192.168.0.2
+                    href: http://192.168.1.2
                     description: OpenMediaVault storage
-                    ping: http://192.168.0.2
+                    ping: http://192.168.1.2
                     widget:
                         type: openmediavault
-                        url: http://192.168.0.2
+                        url: http://192.168.1.2
                         username: "{{HOMEPAGE_VAR_OMV_USERNAME}}"
                         password: "{{HOMEPAGE_VAR_OMV_PASSWORD}}"
                         method: services.getStatus
