@@ -2,7 +2,7 @@ common:
     namespace: home-server
     tz: Europe/London
     network:
-        gateway: 192.168.0.1
+        gateway: 192.168.1.1
 
 certManager:
     namespace: cert-manager
@@ -79,7 +79,7 @@ services:
             - Quick Links:
                 - Router:
                     - abbr: RT
-                      href: http://192.168.0.1
+                      href: http://192.168.1.1
         services:
             - Media:
                 - Jellyfin:
