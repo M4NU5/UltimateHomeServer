@@ -9,7 +9,7 @@ source of truth; there is no kubeconfig here. Don't `helm install`/`upgrade` or
 `kubectl apply` from this directory. `helm lint .` and `helm template .` are the local checks.
 
 Cluster VM (read-only debugging is fine, e.g. `kubectl get`/`logs`/`describe`):
-`ssh k3s@192.168.0.5`
+`ssh k3s@192.168.1.5`
 
 ## Layout
 
@@ -71,7 +71,7 @@ surrounding style:
 Verify a change actually parsed, rather than trusting that it rendered:
 
 ```bash
-ssh k3s@192.168.0.5 'kubectl -n home-server exec deploy/homepage -c homepage -- \
+ssh k3s@192.168.1.5 'kubectl -n home-server exec deploy/homepage -c homepage -- \
   wget -qO- http://localhost:3000/api/services'
 ```
 
