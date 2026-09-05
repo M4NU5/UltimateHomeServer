@@ -57,6 +57,10 @@ spec:
                 - /mnt/seedbox
             initialDelaySeconds: 30
             periodSeconds: 30
+            # stat() on a FUSE mount backed by SFTP over the internet routinely
+            # takes longer than the 1s Kubernetes defaults to. Without this the
+            # kubelet kills a healthy mount roughly every 50 minutes.
+            timeoutSeconds: 10
             failureThreshold: 3  
         volumeMounts:
           - name: seedbox-mount
