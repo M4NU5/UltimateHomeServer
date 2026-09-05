@@ -37,7 +37,7 @@ spec:
           volumeMounts:
             - name: bazarr-config
               mountPath: /config
-            - name: smb
+            - name: media
               mountPath: {{ .Values.services.bazarr.data }}
               subPath: data          # share content root is the data/ subfolder
       volumes:
@@ -45,7 +45,7 @@ spec:
           hostPath:
             path: "{{ .Values.services.bazarr.config }}"
             type: DirectoryOrCreate
-        - name: smb
+        - name: media
           persistentVolumeClaim:
-            claimName: {{ .Values.storage.smb.pvcClaimName }}
+            claimName: {{ .Values.storage.media.pvcClaimName }}
 {{- end }}

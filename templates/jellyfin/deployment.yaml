@@ -42,7 +42,7 @@ spec:
           volumeMounts:
             - name: jellyfin-config
               mountPath: /config
-            - name: smb
+            - name: media
               subPath: "{{ .Values.services.jellyfin.library }}"
               mountPath: /library
       volumes:
@@ -50,7 +50,7 @@ spec:
           hostPath:
             path: "{{ .Values.services.jellyfin.config }}"
             type: DirectoryOrCreate
-        - name: smb
+        - name: media
           persistentVolumeClaim:
-            claimName: {{ .Values.storage.smb.pvcClaimName }}
+            claimName: {{ .Values.storage.media.pvcClaimName }}
 {{- end }}

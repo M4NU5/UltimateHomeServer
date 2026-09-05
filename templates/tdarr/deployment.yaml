@@ -62,7 +62,7 @@ spec:
               mountPath: /app/logs
             - name: tdarr-temp
               mountPath: /temp
-            - name: smb
+            - name: media
               mountPath: {{ .Values.services.tdarr.data }}
       volumes:
         - name: tdarr-server
@@ -81,7 +81,7 @@ spec:
           hostPath:
             path: "{{ .Values.services.tdarr.cache }}"
             type: DirectoryOrCreate
-        - name: smb
+        - name: media
           persistentVolumeClaim:
-            claimName: {{ .Values.storage.smb.pvcClaimName }}
+            claimName: {{ .Values.storage.media.pvcClaimName }}
 {{- end }}
