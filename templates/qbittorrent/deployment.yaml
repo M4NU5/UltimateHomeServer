@@ -19,6 +19,44 @@ spec:
       labels:
         app.kubernetes.io/name: qbittorrent
     spec:
+      initContainers:
+        - name: init-config
+          image: busybox:1.36
+          command:
+            - sh
+            - -ec
+            - |
+              config=/config/qBittorrent/qBittorrent.conf
+              mkdir -p /config/qBittorrent {{ .Values.services.qbittorrent.downloadPath | quote }}
+              if [ ! -e "$config" ]; then
+                cat > "$config.new" <<'EOF'
+              [BitTorrent]
+              Session\DefaultSavePath={{ .Values.services.qbittorrent.downloadPath }}
+              Session\GlobalMaxRatio=0
+              Session\Port={{ .Values.services.qbittorrent.ports.p2p }}
+              Session\ShareLimitAction=Stop
+              [LegalNotice]
+              Accepted=true
+              [Network]
+              PortForwardingEnabled=false
+              [Preferences]
+              Connection\UPnP=false
+              WebUI\Address=*
+              WebUI\LocalHostAuth=true
+              WebUI\AuthSubnetWhitelistEnabled=false
+              WebUI\ServerDomains=*
+              EOF
+                mv "$config.new" "$config"
+              fi
+              chown 1000:1000 /config
+              chown -R 1000:1000 /config/qBittorrent
+              chown 1000:1000 {{ .Values.services.qbittorrent.downloadPath | quote }}
+          volumeMounts:
+            - name: qbittorrent-config
+              mountPath: /config
+            - name: media
+              mountPath: {{ .Values.services.qbittorrent.data }}
+              subPath: data
       containers:
         - name: qbittorrent
           image: "{{ .Values.services.qbittorrent.image.repository }}:{{ .Values.services.qbittorrent.image.tag }}"
@@ -28,32 +66,30 @@ spec:
               value: "1000"
             - name: PGID
               value: "1000"
+            - name: UMASK_SET
+              value: "002"
             - name: TZ
               value: "{{ .Values.common.tz }}"
             - name: WEBUI_PORT
               value: "{{ .Values.services.qbittorrent.ports.http }}"
+            - name: TORRENTING_PORT
+              value: "{{ .Values.services.qbittorrent.ports.p2p }}"
           ports:
             - name: http
               containerPort: {{ .Values.services.qbittorrent.ports.http }}
               protocol: TCP
-            - name: p2p
-              containerPort: {{ .Values.services.qbittorrent.ports.p2p }}
-              protocol: TCP
-            - name: p2pudp
-              containerPort: {{ .Values.services.qbittorrent.ports.p2pudp }}
-              protocol: UDP
           volumeMounts:
             - name: qbittorrent-config
               mountPath: /config
-            - name: seedbox
-              mountPath: /data
+            - name: media
+              mountPath: {{ .Values.services.qbittorrent.data }}
+              subPath: data
       volumes:
         - name: qbittorrent-config
           hostPath:
             path: "{{ .Values.services.qbittorrent.config }}"
             type: DirectoryOrCreate
-        - name: seedbox
-          hostPath:
-            path: /mnt/seedbox          # direct host path - no PVC needed
-            type: DirectoryOrCreate
+        - name: media
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.media.pvcClaimName }}
 {{- end }}

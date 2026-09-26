@@ -348,7 +348,7 @@ services:
         nodeName: InternalNode
 
     qbittorrent:
-        enabled: false
+        enabled: true
         replicaCount: 1
         image:
             repository: lscr.io/linuxserver/qbittorrent
@@ -357,9 +357,11 @@ services:
         ports:
             http: 8080
             p2p: 6881
-            p2pudp: 6881
-        config: /var/lib/k3s/config/qbittorrent
-        data: /seedbox
+        config: /var/lib/k3s/config/qbittorrent-local
+        data: /data
+        downloadPath: /data/downloads/qbittorrent
+        ingress:
+            enabled: false
 
     ## Disabled services
     caido:

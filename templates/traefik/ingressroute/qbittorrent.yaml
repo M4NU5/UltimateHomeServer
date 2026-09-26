@@ -1,1 +1,3 @@
+{{- if .Values.services.qbittorrent.ingress.enabled }}
 {{- include "your-chart.ingressroute" (dict "name" "qbittorrent" "Values" .Values) }}
+{{- end }}
