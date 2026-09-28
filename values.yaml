@@ -209,6 +209,9 @@ services:
                     href: https://dash.giga-rapid.com/services/id/9891
                     description: Seedbox control panel
             - Tracker Links:
+                - Open Tracker Signups:
+                    icon: mdi-reddit
+                    href: https://www.reddit.com/r/OpenSignups/
                 - digitalcore:
                     icon: mdi-disc
                     href: https://digitalcore.club/
@@ -218,9 +221,6 @@ services:
                 - seedpool:
                     icon: mdi-seed
                     href: https://seedpool.org/
-                - Open Tracker Signups:
-                    icon: mdi-reddit
-                    href: https://www.reddit.com/r/OpenSignups/
                 - BitPorn:
                     icon: mdi-filmstrip
                     href: https://bitporn.eu/
