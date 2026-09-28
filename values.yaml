@@ -197,6 +197,13 @@ services:
                         url: https://qbittorrent-jacksparrow69.daredevil.mygiga.cloud
                         username: "{{HOMEPAGE_VAR_QBIT_USERNAME}}"
                         password: "{{HOMEPAGE_VAR_QBIT_PASSWORD}}"
+                - Local qBittorrent:
+                    icon: qbittorrent
+                    href: https://qbittorrent.bongofett.com
+                    description: Local manual downloads; no seeding obligation
+                    siteMonitor: http://qbittorrent.home-server.svc.cluster.local:8080
+                    namespace: home-server
+                    app: qbittorrent
                 - Giga-Rapid:
                     icon: mdi-server-network
                     href: https://dash.giga-rapid.com/services/id/9891
@@ -361,7 +368,7 @@ services:
         data: /data
         downloadPath: /data/downloads/qbittorrent
         ingress:
-            enabled: false
+            enabled: true
 
     ## Disabled services
     caido:
