@@ -208,6 +208,22 @@ services:
                     icon: mdi-server-network
                     href: https://dash.giga-rapid.com/services/id/9891
                     description: Seedbox control panel
+            - Tracker Links:
+                - digitalcore:
+                    icon: mdi-disc
+                    href: https://digitalcore.club/
+                - Rastastugan:
+                    icon: mdi-home
+                    href: https://rastastugan.org/
+                - seedpool:
+                    icon: mdi-seed
+                    href: https://seedpool.org/
+                - Open Tracker Signups:
+                    icon: mdi-reddit
+                    href: https://www.reddit.com/r/OpenSignups/
+                - BitPorn:
+                    icon: mdi-filmstrip
+                    href: https://bitporn.eu/
         widgets:
             - greeting:
                 text_size: xl
@@ -253,6 +269,9 @@ services:
                 Seedbox:
                     style: row
                     columns: 2
+                Tracker Links:
+                    style: row
+                    columns: 5
 
     jellyfin:
         enabled: true
