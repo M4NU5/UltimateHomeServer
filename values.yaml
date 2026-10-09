@@ -54,7 +54,7 @@ services:
         # a SealedSecret in sealed-secrets/ with these keys:
         #   HOMEPAGE_VAR_JELLYFIN_API_KEY   HOMEPAGE_VAR_PROWLARR_API_KEY
         #   HOMEPAGE_VAR_SONARR_API_KEY     HOMEPAGE_VAR_BAZARR_API_KEY
-        #   HOMEPAGE_VAR_RADARR_API_KEY     HOMEPAGE_VAR_OMV_USERNAME/_PASSWORD
+        #   HOMEPAGE_VAR_RADARR_API_KEY
         #   HOMEPAGE_VAR_QBIT_USERNAME/_PASSWORD (seedbox qBittorrent web UI)
         # Until it exists the tiles still render with a live up/down dot (ping) and
         # Kubernetes CPU/mem; only the stat widgets stay empty.
@@ -172,17 +172,6 @@ services:
                     # in the namespace, which is what we want for a multi-pod stack.
                     namespace: firecrawl
                     podSelector: ""
-                - NAS:
-                    icon: openmediavault
-                    href: http://192.168.1.2
-                    description: OpenMediaVault storage
-                    ping: http://192.168.1.2
-                    widget:
-                        type: openmediavault
-                        url: http://192.168.1.2
-                        username: "{{HOMEPAGE_VAR_OMV_USERNAME}}"
-                        password: "{{HOMEPAGE_VAR_OMV_PASSWORD}}"
-                        method: services.getStatus
             - Seedbox:
                 # Off-cluster (Giga-Rapid). No `namespace`/`app` — there are no pods to
                 # read stats from — and `siteMonitor` instead of `ping`, because the

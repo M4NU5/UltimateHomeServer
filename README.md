@@ -57,6 +57,24 @@ The Web UI is available at [qbittorrent.bongofett.com](https://qbittorrent.bongo
 ### Network
 - 🌐 [`traefik`](https://doc.traefik.io/): A kubernetes native high-performance web server and reverse proxy.
 - ☁️ [`cloudflared`](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation/): Expose services running on your home network to the internet.
+
+Connect to Tailscale to use [Homepage](https://homepage.bongofett.com), [Jellyfin](https://jellyfin.bongofett.com), and [ArgoCD](https://argocd.bongofett.com) away from home. All three names resolve to `192.168.1.5`; `k3s-master` already advertises the approved `192.168.1.5/32` subnet route, which carries HTTPS traffic to the existing Traefik ingress. The same links work on the home LAN. No exit node or public port forwarding is required.
+
+[Windows, macOS, and mobile clients accept subnet routes automatically](https://tailscale.com/docs/features/subnet-routers#use-your-subnet-routes-from-other-devices). On a Linux client, enable them with `sudo tailscale set --accept-routes=true`. Tailscale access rules must permit the client to reach `192.168.1.5:443`. Keep the host route narrow: it covers the cluster's HTTPS services and Homepage links to them, but does not provide remote access to the router (`192.168.1.1`).
+
+In Jellyfin's **Dashboard → Networking → Local networks**, use `192.168.1.0/24,10.42.0.0/24,100.64.0.0/10`. The Tailscale range is needed because Traefik forwards the client's Tailscale IP. Keep **Allow remote connections to this server** disabled and retain the existing known proxy range (`10.42.0.0/24`). These settings persist in `/var/lib/k3s/config/jellyfin/network.xml`, outside the Helm release. Save and restart Jellyfin after changing them. Before editing this file directly, stop the Jellyfin process and back up the file; restore that backup while the process is stopped to roll back.
+
+From a client connected to Tailscale, check the existing HTTPS routes:
+
+```bash
+curl --fail --silent --show-error https://jellyfin.bongofett.com/System/Info/Public
+curl --fail --silent --show-error --output /dev/null https://homepage.bongofett.com
+curl --fail --silent --show-error --output /dev/null https://argocd.bongofett.com
+tailscale ping k3s-master
+```
+
+The HTTP checks confirm app access, and `tailscale ping` reports a direct or relayed tunnel. Verify playback separately; these checks do not measure streaming throughput. For a remote check, repeat them on a hotspot or another network.
+
 ### Messaging
 - 💬 [`thelounge`](https://thelounge.chat/): A modern, self-hosted web IRC client.
 ### Notifications
