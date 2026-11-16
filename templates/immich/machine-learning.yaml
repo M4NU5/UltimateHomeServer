@@ -1,0 +1,74 @@
+{{- if .Values.services.immich.enabled }}
+{{- $ml := .Values.services.immich.machineLearning }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-machine-learning
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app.kubernetes.io/name: immich-machine-learning
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: immich-machine-learning
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: immich-machine-learning
+    spec:
+      # Same IMMICH_PORT clash as the server; see deployment.yaml.
+      enableServiceLinks: false
+      containers:
+        - name: immich-machine-learning
+          image: "{{ $ml.repository }}:{{ $ml.tag }}"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: "{{ .Values.common.tz }}"
+            - name: MACHINE_LEARNING_MODEL_REVISION
+              value: v2
+          ports:
+            - name: http
+              containerPort: {{ $ml.port }}
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: http
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            periodSeconds: 30
+          volumeMounts:
+            - name: model-cache
+              mountPath: /cache
+      volumes:
+        - name: model-cache
+          hostPath:
+            path: "{{ $ml.cache }}"
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-machine-learning
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app.kubernetes.io/name: immich-machine-learning
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: {{ $ml.port }}
+      targetPort: http
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: immich-machine-learning
+{{- end }}

@@ -1,0 +1,85 @@
+{{- if .Values.services.immich.enabled }}
+{{- $pg := .Values.services.immich.postgres }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-postgres
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app.kubernetes.io/name: immich-postgres
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: immich-postgres
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: immich-postgres
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: postgres
+          image: "{{ $pg.repository }}:{{ $pg.tag }}"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: immich
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.services.immich.dbSecret }}
+                  key: password
+            - name: POSTGRES_INITDB_ARGS
+              value: "--data-checksums"
+          ports:
+            - name: postgres
+              containerPort: 5432
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres", "-d", "immich"]
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres", "-d", "immich"]
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+            - name: shm
+              mountPath: /dev/shm
+      volumes:
+        - name: data
+          hostPath:
+            path: "{{ $pg.data }}"
+            type: DirectoryOrCreate
+        # Matches shm_size: 128mb in the upstream compose file.
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-postgres
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app.kubernetes.io/name: immich-postgres
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: postgres
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: immich-postgres
+{{- end }}

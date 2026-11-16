@@ -1,0 +1,18 @@
+{{- if .Values.services.immich.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app.kubernetes.io/name: immich
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: {{ .Values.services.immich.ports.http }}
+      targetPort: http
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: immich
+{{- end }}
