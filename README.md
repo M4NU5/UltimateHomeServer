@@ -40,7 +40,7 @@ Here are some useful resources to get you started:
 - 📖 [`kavita`](https://www.kavitareader.com/): A modern reading server for manga, comics, and books.
 - 📷 [`immich`](https://immich.app/): A self-hosted photo library at [immich.bongofett.com](https://immich.bongofett.com).
 
-Immich keeps its own files (phone uploads, thumbnails) in `immich/upload` on the media disk. Your own photos go in `photos/` on the same disk (`/mnt/media/nasty/photos` on the host), for example `photos/raw/` and `photos/exports/`. Immich mounts that folder read-only at `/photos`, so it never changes originals or editor sidecars. After first sign-up, add `/photos` as an External Library under Administration → External Libraries. Ratings and keywords in XMP sidecars show up after each library scan.
+Immich keeps its own files (phone uploads, thumbnails) in `immich/upload` on the media disk. Your own photos go in `photos/` on the same disk (`/mnt/media/nasty/photos` on the host), for example `photos/raw/` and `photos/exports/`. Immich mounts that folder read-only at `/photos`, so it never changes originals or editor sidecars. After first sign-up, add `/photos` as an External Library under Administration → External Libraries. A library scan imports new photos with the ratings and keywords from their XMP sidecars. A scan does not notice a sidecar-only change (for example a new rating set in your editor) on a photo already imported; run Sidecar Metadata → Sync under Administration → Jobs to refresh those.
 
 The Postgres password lives in the `immich-db` secret (`sealed-secrets/sealed-immich-db.yaml`).
 ### Media Management
