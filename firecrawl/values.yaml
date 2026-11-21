@@ -46,3 +46,6 @@ config:
   FIRECRAWL_APP_SCHEME: "https"
   FIRECRAWL_APP_HOST: "firecrawl.bongofett.com"
   FIRECRAWL_APP_PORT: ""
+  # Search via the in-cluster SearXNG (firecrawl/extra/searxng.yaml) instead of scraping DuckDuckGo.
+  SEARXNG_ENDPOINT: "http://searxng.firecrawl.svc.cluster.local:8080"
+  SEARXNG_CATEGORIES: "general"

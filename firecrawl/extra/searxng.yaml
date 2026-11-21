@@ -1,0 +1,109 @@
+# SearXNG: metasearch backend for Firecrawl /search (SEARXNG_ENDPOINT in firecrawl/values.yaml).
+# Without it Firecrawl scrapes DuckDuckGo directly, which blocks it as a bot.
+# SearXNG spreads each query over several engines, so one engine blocking us still returns results.
+# Cluster-internal only: no IngressRoute, limiter off.
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: searxng-secret
+  namespace: firecrawl
+spec:
+  encryptedData:
+    SEARXNG_SECRET: AgB4y8Q/lZYeekNiCyGN7waAaqm7hY27thJgH0ycUeLeuDp+pfzxTy/QXodL67VuJcDxiF/nUF/NbValNwk2Q+6PDYkcyKxkvEuENRlcnOoaZlE2Ln9yL5SG8YvnXx9AbrZFaPPyZWWAnBqvsYH8wnh11m+wvbWE9eqrw2mHyUi180uyel9SPOyhfEYHc21v02yiYk6Y1EdH2MPG495738CQLonmsBWbIUc6soAzmyh6uKMId5oDZZBuxTxzQ0Kv1VY7gVVFsRVQ4YiJrqAFNW+PkBU0f8fDUhNaPsiwlZ4by4f77XRamYWncGdtvZqiVHexH/jL19kDPop5ywYiCe+49gkCL7pojlORyvCIpb0kw49q/ehkFy8mZUvcWVpljDJi6rDWgZnnaoHU3HoBf4yGYoP10qRZyhdF7oVfaFbfUKjRBK1MA0suV4+ze3tpNO43PjoAYDBcOft9+8+9EfB5rzQN6Ps0K5+QcY0ZSnQ15U+nLJ9csVE8ubbPz+nSmKc3WEK5qNJqAwS9Is4NSAiK4v/qMvDAwHVXkWBzx0xaaYOhXVVCetUSs8Vyo3IaCgCFzXtzrBoIFueeoEZTF1k5RCCCkU0kl2DvwMHzGDd6fWvEFFZ4vZsaEwsbBpDmoSwRz8E/zdwiqY0mHfHB2SoxGQ/VydD6t6XUYz+mZ9pj6lI7PySlpU4Cbur0c+i+QfNSjtRJuBlqLRuLvJwjxVWRLUgufATL5SAxXyfo1L2awlONu7LR5x3t
+  template:
+    metadata:
+      name: searxng-secret
+      namespace: firecrawl
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: searxng-settings
+  namespace: firecrawl
+data:
+  settings.yml: |
+    use_default_settings: true
+    general:
+      instance_name: firecrawl-searxng
+    server:
+      limiter: false
+      public_instance: false
+      image_proxy: false
+    search:
+      safe_search: 0
+      formats:
+        - html
+        - json
+    outgoing:
+      request_timeout: 6.0
+      max_request_timeout: 15.0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: searxng
+  namespace: firecrawl
+  labels:
+    app: searxng
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: searxng
+  template:
+    metadata:
+      labels:
+        app: searxng
+    spec:
+      containers:
+        - name: searxng
+          image: searxng/searxng:2026.11.6-ac11e14c5
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: searxng-secret
+          volumeMounts:
+            - name: etc
+              mountPath: /etc/searxng
+            - name: settings
+              mountPath: /etc/searxng/settings.yml
+              subPath: settings.yml
+            - name: cache
+              mountPath: /var/cache/searxng
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+      volumes:
+        - name: etc
+          emptyDir: {}
+        - name: settings
+          configMap:
+            name: searxng-settings
+        - name: cache
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: searxng
+  namespace: firecrawl
+spec:
+  selector:
+    app: searxng
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
