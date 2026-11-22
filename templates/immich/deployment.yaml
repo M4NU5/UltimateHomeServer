@@ -1,0 +1,82 @@
+{{- if .Values.services.immich.enabled }}
+{{- $immich := .Values.services.immich }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app.kubernetes.io/name: immich
+spec:
+  revisionHistoryLimit: 3
+  replicas: {{ $immich.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: immich
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: immich
+    spec:
+      # The Service named "immich" would inject IMMICH_PORT=tcp://... into the pod,
+      # which Immich reads as its listen port. Service links must stay off.
+      enableServiceLinks: false
+      containers:
+        - name: immich
+          image: "{{ $immich.image.repository }}:{{ $immich.image.tag }}"
+          imagePullPolicy: {{ $immich.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: "{{ .Values.common.tz }}"
+            - name: DB_HOSTNAME
+              value: immich-postgres
+            - name: DB_USERNAME
+              value: postgres
+            - name: DB_DATABASE_NAME
+              value: immich
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $immich.dbSecret }}
+                  key: password
+            - name: REDIS_HOSTNAME
+              value: immich-valkey
+          # Machine learning is found at its default URL,
+          # http://immich-machine-learning:3003, via the Service of that name.
+          ports:
+            - name: http
+              containerPort: {{ $immich.ports.http }}
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /api/server/ping
+              port: http
+            periodSeconds: 10
+            failureThreshold: 60   # first boot runs DB migrations
+          livenessProbe:
+            httpGet:
+              path: /api/server/ping
+              port: http
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/server/ping
+              port: http
+            periodSeconds: 10
+          volumeMounts:
+            - name: media
+              subPath: "{{ $immich.upload }}"
+              mountPath: /data
+            # Your own folders. Read-only so Immich can never delete or rewrite
+            # originals or Greycard's sidecars.
+            - name: media
+              subPath: "{{ $immich.library }}"
+              mountPath: /photos
+              readOnly: true
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.media.pvcClaimName }}
+{{- end }}

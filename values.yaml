@@ -100,6 +100,13 @@ services:
                         key: "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}"
                         enableBlocks: true
                         enableNowPlaying: true
+                - Immich:
+                    icon: immich
+                    href: https://immich.bongofett.com
+                    description: Photo library
+                    ping: http://immich.home-server.svc.cluster.local:2283/api/server/ping
+                    namespace: home-server
+                    app: immich
                 - Tdarr:
                     icon: tdarr
                     href: https://tdarr.bongofett.com
@@ -274,6 +281,43 @@ services:
             udp: 7359
         config: /var/lib/k3s/config/jellyfin
         library: data/library
+
+    # Photo library. Images are pinned, not :latest — Immich runs DB migrations on
+    # upgrade, so bump all four together from the release's docker-compose.yml:
+    # https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml
+    immich:
+        enabled: true
+        replicaCount: 1
+        image:
+            repository: ghcr.io/immich-app/immich-server
+            tag: v3.4.1
+            pullPolicy: IfNotPresent
+        ports:
+            http: 2283
+        # subPaths of the media PVC (/mnt/media/nasty on the host).
+        # upload: Immich-managed files (phone uploads, thumbnails, encoded video).
+        # library: your own photo folders (raw/, exports/), mounted READ-ONLY at
+        #   /photos. Add /photos as an External Library in the Immich admin UI.
+        #   Immich never writes there; edit and rate in Greycard instead.
+        upload: immich/upload
+        library: photos
+        # Secret holding the Postgres password (key: password). SealedSecret in
+        # sealed-secrets/sealed-immich-db.yaml.
+        dbSecret: immich-db
+        machineLearning:
+            repository: ghcr.io/immich-app/immich-machine-learning
+            tag: v3.4.1
+            port: 3003
+            cache: /var/lib/k3s/cache/immich-ml
+        postgres:
+            # Immich's own Postgres build with VectorChord; stock postgres won't work.
+            repository: ghcr.io/immich-app/postgres
+            tag: 14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+            # Local disk only; the DB must not sit on a network share.
+            data: /var/lib/k3s/config/immich/postgres
+        valkey:
+            repository: docker.io/valkey/valkey
+            tag: 9@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd
 
     prowlarr:
         enabled: true
