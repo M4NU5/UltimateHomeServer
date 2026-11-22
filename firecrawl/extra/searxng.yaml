@@ -1,7 +1,7 @@
 # SearXNG: metasearch backend for Firecrawl /search (SEARXNG_ENDPOINT in firecrawl/values.yaml).
 # Without it Firecrawl scrapes DuckDuckGo directly, which blocks it as a bot.
 # SearXNG spreads each query over several engines, so one engine blocking us still returns results.
-# Cluster-internal only: no IngressRoute, limiter off.
+# Browser page: https://searxng.bongofett.com (searxng-ingress.yaml, home LAN only).
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
@@ -21,22 +21,44 @@ metadata:
   name: searxng-settings
   namespace: firecrawl
 data:
+  # Mounted as the whole /etc/searxng directory (no subPath), so edits reach the pod without a rebuild.
+  # Engines tested from the home IP on 2026-11-22: bing, brave and google cse answer; google,
+  # qwant and wikidata are denied and duckduckgo CAPTCHAs, so those are off.
   settings.yml: |
-    use_default_settings: true
+    use_default_settings:
+      engines:
+        remove:
+          - wikidata
     general:
-      instance_name: firecrawl-searxng
+      instance_name: SearXNG
     server:
-      limiter: false
+      base_url: https://searxng.bongofett.com/
+      limiter: false          # LAN-only behind an allowlist; the limiter would also need valkey
       public_instance: false
-      image_proxy: false
+      image_proxy: true       # the browser loads result images via SearXNG, not from third parties
+      method: GET
     search:
       safe_search: 0
+      autocomplete: brave     # default is duckduckgo, which CAPTCHAs us
       formats:
         - html
-        - json
+        - json                # Firecrawl calls /search?format=json
     outgoing:
       request_timeout: 6.0
       max_request_timeout: 15.0
+    engines:
+      - name: duckduckgo
+        disabled: true
+      - name: bing
+        disabled: false
+      - name: brave
+        disabled: false
+  # Read even with the limiter off: lets SearXNG trust Traefik's X-Forwarded-For (pod CIDR 10.42.0.0/16).
+  limiter.toml: |
+    [botdetection]
+    ipv4_prefix = 32
+    ipv6_prefix = 48
+    trusted_proxies = ['127.0.0.0/8', '::1', '10.42.0.0/16']
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -56,6 +78,9 @@ spec:
     metadata:
       labels:
         app: searxng
+      annotations:
+        # SearXNG reads its config only at start. Bump this when searxng-settings changes.
+        searxng/config-rev: "2"
     spec:
       containers:
         - name: searxng
@@ -63,15 +88,16 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+          env:
+            - name: FORCE_OWNERSHIP   # config is a read-only ConfigMap; skip the entrypoint's chown
+              value: "false"
           envFrom:
             - secretRef:
                 name: searxng-secret
           volumeMounts:
-            - name: etc
-              mountPath: /etc/searxng
             - name: settings
-              mountPath: /etc/searxng/settings.yml
-              subPath: settings.yml
+              mountPath: /etc/searxng
+              readOnly: true
             - name: cache
               mountPath: /var/cache/searxng
           readinessProbe:
@@ -87,8 +113,6 @@ spec:
             limits:
               memory: 512Mi
       volumes:
-        - name: etc
-          emptyDir: {}
         - name: settings
           configMap:
             name: searxng-settings

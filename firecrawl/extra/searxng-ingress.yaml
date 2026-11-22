@@ -1,0 +1,30 @@
+# Browser access to SearXNG at https://searxng.bongofett.com, home LAN only.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: searxng-allow-lan
+  namespace: firecrawl
+spec:
+  ipAllowList:
+    sourceRange:
+      - 192.168.1.0/24
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: searxng
+  namespace: firecrawl
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`searxng.bongofett.com`)
+      services:
+        - kind: Service
+          name: searxng
+          port: 8080
+      middlewares:
+        - name: searxng-allow-lan
+  tls:
+    secretName: bongofett-cert
