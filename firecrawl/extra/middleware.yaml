@@ -6,5 +6,8 @@ metadata:
 spec:
   ipAllowList:
     sourceRange:
-      # Replace with Hermes VM /32 once its address is reserved.
+      # Home LAN. Replace with Hermes VM /32 once its address is reserved.
       - 192.168.1.0/24
+      # Tailscale clients (e.g. the WSL Firecrawl MCP) reach 192.168.1.5 over the tailnet
+      # subnet route, so Traefik sees their 100.x IP. Same rule as searxng-ingress.yaml.
+      - 100.64.0.0/10
